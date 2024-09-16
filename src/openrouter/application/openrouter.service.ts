@@ -4,7 +4,7 @@ import { OPENROUTER_MODEL } from './openrouter.constant';
 import { GenAiResponse } from '~shared/interfaces/response.interface';
 import { env } from '~shared/configs/env.config';
 import { createSystemMessage, createUserMessage } from './helpers/message.helper';
-import { GENAI_SYSTEM_MESSAGE } from '~shared/constant/system-message.constant';
+import { GENAI_SYSTEM_MESSAGE_BASE_64 } from '~shared/constant/system-message.constant';
 
 @Injectable()
 export class OpenrouterService {
@@ -14,7 +14,7 @@ export class OpenrouterService {
 
   async generateText(prompt: string): Promise<GenAiResponse> {
     try {
-      const systemMessage = createSystemMessage(GENAI_SYSTEM_MESSAGE);
+      const systemMessage = createSystemMessage(atob(GENAI_SYSTEM_MESSAGE_BASE_64));
 
       const completion = await this.openrouter.chat.completions.create({
         model: env.OPENROUTER.FREE_MODEL,
