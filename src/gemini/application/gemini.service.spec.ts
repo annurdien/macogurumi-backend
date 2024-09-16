@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GeminiService } from './gemini.service';
 import { GenerativeModel } from '@google/generative-ai';
 import { GEMINI_PRO_MODEL } from './gemini.constant';
-import { GeminiGenAiResponse } from '../domain/interface/response.interface';
+import { GenAiResponse } from '~shared/interfaces/response.interface'; 
 
 describe('GeminiService', () => {
   let service: GeminiService;
@@ -35,7 +35,7 @@ describe('GeminiService', () => {
 
   it('should generate text', async () => {
     const prompt = 'Test prompt';
-    const expectedResponse: GeminiGenAiResponse = {
+    const expectedResponse: GenAiResponse = {
       totalTokens: 10,
       text: 'Generated text',
     };

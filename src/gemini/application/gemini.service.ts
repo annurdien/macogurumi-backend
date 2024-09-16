@@ -1,8 +1,8 @@
-import { GenerativeModel } from '@google/generative-ai';
+import { GenerativeModel, GoogleGenerativeAIError } from '@google/generative-ai';
 import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { GEMINI_PRO_MODEL } from './gemini.constant';
-import { GeminiGenAiResponse } from '~gemini/domain/interface/response.interface';
 import { createContent } from './helpers/content.helper';
+import { GenAiResponse } from '~shared/interfaces/response.interface';
 
 @Injectable()
 export class GeminiService {
@@ -10,17 +10,31 @@ export class GeminiService {
 
   constructor(@Inject(GEMINI_PRO_MODEL) private readonly proModel: GenerativeModel) {}
 
-  async generateText(prompt: string): Promise<GeminiGenAiResponse> {
-    const contents = createContent(prompt);
+  async generateText(prompt: string): Promise<GenAiResponse> {
+    try {
+      const contents = createContent(prompt);
 
-    const { totalTokens } = await this.proModel.countTokens({ contents });
-    this.logger.log(`Tokens: ${JSON.stringify(totalTokens)}`);
+      const { totalTokens } = await this.proModel.countTokens({ contents });
+      this.logger.log(`Tokens: ${JSON.stringify(totalTokens)}`);
 
-    const result = await this.proModel.generateContent({ contents });
-    const response = result.response;
-    const text = response.text();
+      const result = await this.proModel.generateContent({ contents });
+      const response = result.response;
+      const text = response.text();
 
-    this.logger.log(JSON.stringify(text));
-    return { totalTokens, text };
+      this.logger.log(JSON.stringify(text));
+      return { totalTokens, text };
+
+    } catch (error) {
+      this.logger.error(`Error generating text with Gemini: ${error}`);
+
+      if (error instanceof GoogleGenerativeAIError) {
+        this.logger.error(`Gemini API Error: ${error.stack} - ${error.message}`);
+
+        throw new Error(`Gemini API Error: ${error.message} (Code: ${error.name || 'UNKNOWN'})`);
+      } else {
+        throw new Error('Failed to generate text with Gemini');
+      }
+    }
   }
 }
+
