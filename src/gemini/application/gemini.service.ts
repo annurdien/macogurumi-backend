@@ -2,7 +2,7 @@ import { GenerativeModel, GoogleGenerativeAIError } from '@google/generative-ai'
 import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { GEMINI_PRO_MODEL } from './gemini.constant';
 import { createContent } from './helpers/content.helper';
-import { GenAiResponse } from '~shared/interfaces/response.interface';
+import { GenAiResponse } from '~shared/interfaces/genai-response.type';
 
 @Injectable()
 export class GeminiService {
