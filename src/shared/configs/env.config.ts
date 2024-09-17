@@ -11,4 +11,7 @@ export const env = {
     FREE_MODEL: process.env.OPENROUTER_FREE_MODEL || 'nousresearch/hermes-3-llama-3.1-405b:free',
     BASE_URL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
   },
+  API: {
+      KEY: process.env.X_API_KEY || '',
+  }
 };

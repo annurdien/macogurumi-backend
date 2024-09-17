@@ -1,0 +1,4 @@
+export enum PROVIDER {
+    OPENROUTER = "OPENROUTER", 
+    GEMINI = "GEMINI"
+}
