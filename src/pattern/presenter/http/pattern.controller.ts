@@ -1,8 +1,9 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PatternDecoderDto } from './dto/pattern.dto';
 import { ApiKeyGuard } from './guards/api-key.guard';
 import { PatternService } from '~pattern/application/pattern.service';
+import { PatternDecoderResponse } from '~pattern/domain/interfaces/response.type';
 
 @ApiTags('Pattern Decoder')
 @UseGuards(ApiKeyGuard)
@@ -13,6 +14,11 @@ import { PatternService } from '~pattern/application/pattern.service';
 export class PatternController {
     constructor(private readonly patternDecoderService: PatternService) {}
 
+    @ApiBody({
+           description: 'The pattern to decode',
+           required: true,
+           type: PatternDecoderDto,
+        })
     @Post('decode')
     async decodePattern(
         @Body() dto: PatternDecoderDto
