@@ -1,7 +1,7 @@
 import { OpenAI, APIError } from 'openai';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { OPENROUTER_MODEL } from './openrouter.constant';
-import { GenAiResponse } from '~shared/interfaces/response.interface';
+import { OPENROUTER_CONFIG, OPENROUTER_MODEL } from './openrouter.constant';
+import { GenAiResponse } from '~shared/interfaces/genai-response.type';
 import { env } from '~shared/configs/env.config';
 import { createSystemMessage, createUserMessage } from './helpers/message.helper';
 import { GENAI_SYSTEM_MESSAGE_BASE_64 } from '~shared/constant/system-message.constant';
@@ -17,6 +17,8 @@ export class OpenrouterService {
       const systemMessage = createSystemMessage(atob(GENAI_SYSTEM_MESSAGE_BASE_64));
 
       const completion = await this.openrouter.chat.completions.create({
+        temperature: OPENROUTER_CONFIG.temperature,
+        top_p: OPENROUTER_CONFIG.top_p,
         model: env.OPENROUTER.FREE_MODEL,
         messages: [systemMessage, createUserMessage(prompt)],
       });
