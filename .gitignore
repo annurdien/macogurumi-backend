@@ -40,3 +40,4 @@ lerna-debug.log*
 /ormconfig.json
 .vercel
 .aws-sam
+.serverless
