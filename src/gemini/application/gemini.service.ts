@@ -15,6 +15,7 @@ export class GeminiService {
       const contents = createContent(prompt);
 
       const { totalTokens } = await this.proModel.countTokens({ contents });
+      this.logger.log(`Model: ${this.proModel.model}`)
       this.logger.log(`Tokens: ${JSON.stringify(totalTokens)}`);
 
       const result = await this.proModel.generateContent({ contents });
