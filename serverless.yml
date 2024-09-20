@@ -1,0 +1,24 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: macogurumi
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: macogurumi
+service: macogurumi-backend
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+
+functions:
+  main:
+    handler: dist/main.handler
+    timeout: 30  # Set the timeout to 30 seconds
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
