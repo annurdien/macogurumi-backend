@@ -1,10 +1,10 @@
 import { GenerationConfig, HarmBlockThreshold, HarmCategory, SafetySetting } from '@google/generative-ai';
 
 export const GEMINI_GENERATION_CONFIG: GenerationConfig = {
-  maxOutputTokens: 8000,
+  maxOutputTokens: 8192,
   temperature: 0.2,
-  topK: 0,
-  topP: 1,
+  topK: 64,
+  topP: 0.95,
 };
 
 export const GEMINI_SAFETY_SETTINGS: SafetySetting[] = [
