@@ -22,3 +22,9 @@ functions:
       - http:
           method: ANY
           path: '{proxy+}'
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    - node_modules/**
+    - venv/**
