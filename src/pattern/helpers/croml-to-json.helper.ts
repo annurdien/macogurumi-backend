@@ -5,79 +5,99 @@ export interface MarkupToJSONConverter {
 }
 
 export class CROMLToJSONConverter implements MarkupToJSONConverter {
-    private parseStitchGroup(group: string): Stitch[] {
-        const stitches: Stitch[] = [];
-        const stitchRegex = /([A-Z]+)(x(\d+))?/g;
+    private parseSequence(sequenceText: string): Sequence[] {
+        const sequences: Sequence[] = [];
 
+        // Regular expression to match grouped sequences with repeats
+        const groupRegex = /\((.*?)\)\s*\[r=(\d+)\]/g;
+        let groupMatch;
+        let lastIndex = 0;
+
+        // Process each grouped sequence
+        while ((groupMatch = groupRegex.exec(sequenceText)) !== null) {
+            const groupContent = groupMatch[1];
+            const repeat = parseInt(groupMatch[2], 10);
+
+            // Handle single stitches before the group
+            const preGroupText = sequenceText.substring(lastIndex, groupMatch.index).trim();
+            if (preGroupText) {
+                this.addSingleStitches(sequences, preGroupText);
+            }
+
+            // Add the group sequence
+            const stitches = this.parseStitchGroup(groupContent);
+            sequences.push({
+                stiches: stitches,
+                repeat,
+            });
+
+            // Update lastIndex to be the end of the current group
+            lastIndex = groupMatch.index + groupMatch[0].length;
+        }
+
+        // Handle any single stitches after the last group
+        const remainingText = sequenceText.substring(lastIndex).trim();
+        if (remainingText) {
+            this.addSingleStitches(sequences, remainingText);
+        }
+
+        return sequences;
+    }
+
+    // Add single stitches to sequences
+    private addSingleStitches(sequences: Sequence[], text: string): void {
+        const singleRegex = /([A-Z]+)(x(\d+))?/g;
         let match;
-        while ((match = stitchRegex.exec(group)) !== null) {
+
+        while ((match = singleRegex.exec(text)) !== null) {
+            const stitchName = match[1];
+            const times = match[3] ? parseInt(match[3], 10) : 1;
+
+            sequences.push({
+                stiches: [
+                    {
+                        name: stitchName,
+                        times: times,
+                    },
+                ],
+                repeat: 1,
+            });
+        }
+    }
+
+    // Parse a group of stitches
+    private parseStitchGroup(groupContent: string): Stitch[] {
+        const stitches: Stitch[] = [];
+        const singleRegex = /([A-Z]+)(x(\d+))?/g;
+        let match;
+
+        while ((match = singleRegex.exec(groupContent)) !== null) {
             const stitchName = match[1];
             const times = match[3] ? parseInt(match[3], 10) : 1;
 
             stitches.push({
                 name: stitchName,
-                times,
+                times: times,
             });
         }
 
         return stitches;
     }
 
-    private parseSequence(sequenceText: string): Sequence {
-        const groupRegex = /\((.*?)\)\s*\[r=(\d+)\]/g;
-        const singleRegex = /([A-Z]+)(x(\d+))?/g;
 
-        const sequences: Sequence[] = [];
-
-        let match;
-
-        // Handle groups like (SCx1, INCx1) [r=6]
-        while ((match = groupRegex.exec(sequenceText)) !== null) {
-            const groupContent = match[1]; // SCx1, INCx1
-            const repeat = parseInt(match[2], 10); // r=6
-
-            const stitches = this.parseStitchGroup(groupContent);
-
-            sequences.push({
-                stiches: stitches,
-                repeat,
-            });
-        }
-
-        // Handle single stitches like SCx8, INCx1
-        let singleMatch;
-        while ((singleMatch = singleRegex.exec(sequenceText)) !== null) {
-            const stitchName = singleMatch[1];
-            const times = singleMatch[3] ? parseInt(singleMatch[3], 10) : 1;
-
-            sequences.push({
-                stiches: [
-                    {
-                        name: stitchName,
-                        times: 1,
-                    }
-                ],
-                repeat: times,
-            });
-        }
-
-        return sequences.length > 0 ? sequences[0] : { stiches: [], repeat: 1 }; // Handle single sequences
-    }
 
     private parseLine(line: string, rowRange: number[]): Layer[] {
-        const sequences: Sequence[] = [];
-        const stitchRegex = /([A-Z]+)(x(\d+))?/g;
-
         const sequenceText = line.replace(/^\d+(-\d+)?:\s*/, ''); // Remove row numbers
-        const sequence = this.parseSequence(sequenceText);
+        const sequences = this.parseSequence(sequenceText);
 
         const layers: Layer[] = rowRange.map((row) => ({
             id: row,
-            sequences: [sequence],
+            sequences: sequences, // Correctly map all parsed sequences
         }));
 
         return layers;
     }
+
 
     private parseRowRange(range: string): number[] {
         const rangeMatch = range.match(/(\d+)-(\d+)/);
@@ -93,8 +113,13 @@ export class CROMLToJSONConverter implements MarkupToJSONConverter {
     public convert(input: string): Pattern {
         const parts: Part[] = [];
         let currentPart: Part | null = null;
+        
+        // remove all spaces but not newline in input string
+        const noSpacing = input.replaceAll(' ', '');
 
-        const lines = input.split(/\r?\n/);
+        console.log(noSpacing)
+
+        const lines = noSpacing.split(/\r?\n/);
 
         lines.forEach((line) => {
             const trimmedLine = line.trim();
@@ -128,41 +153,3 @@ export class CROMLToJSONConverter implements MarkupToJSONConverter {
     }
 }
 
-// Example usage:
-// const markup = `
-//   Body:
-//   1: SCx6
-//   2: INCx6
-//   3: (SCx1, INCx1) [r=6]
-//   4: (SCx8, INCx1) [r=2]
-//   5-10: SCx20
-//   11: (SCx8, DECx1) [r=2]
-//   12: (SCx1, DECx1) [r=6]
-//   13: DECx6
-//   Paws:
-//   1: SCx6
-//   2-6: SCx6
-//   Head:
-//   1: SCx6
-//   2: (SCx1, INCx1) [r=6]
-//   3: (SCx2, INCx1) [r=6]
-//   4: (SCx3, INCx1) [r=6]
-//   5: (SCx4, INCx1) [r=6]
-//   6-8: SCx30
-//   9: (SCx3, DECx1) [r=6]
-//   10-11: SCx24
-//   12: (SCx2, DECx1) [r=6]
-//   13-14: SCx18
-//   15: (SCx1, DECx1) [r=6]
-//   16: DECx6
-//   Ears:
-//   1: CHx5, SCx1, DCx2, SCx1
-//   Horn:
-//   1: SCx4
-//   2: SCx5
-//   3: SCx6
-//   4: SCx8
-//   `
-// const converter = new CROMLToJSONConverter();
-// const jsonPattern = converter.convert(markup);
-// console.log(JSON.stringify(jsonPattern, null, 2));
