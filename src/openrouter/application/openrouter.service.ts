@@ -17,6 +17,7 @@ export class OpenrouterService {
       const systemMessage = createSystemMessage(atob(GENAI_SYSTEM_MESSAGE_BASE_64));
 
       const completion = await this.openrouter.chat.completions.create({
+        max_tokens: OPENROUTER_CONFIG.max_tokens,
         temperature: OPENROUTER_CONFIG.temperature,
         top_p: OPENROUTER_CONFIG.top_p,
         model: env.OPENROUTER.FREE_MODEL,
@@ -26,7 +27,8 @@ export class OpenrouterService {
       const totalTokens = completion.usage?.total_tokens || 0;
       const text = completion.choices[0]?.message?.content || '';
 
-      this.logger.log(`OpenRouter response: ${JSON.stringify({ totalTokens, text })}`);
+      this.logger.log(`Total Token: ${totalTokens}`)
+      this.logger.log(`OpenRouter response: ${JSON.stringify({ text })}`);
 
       return { totalTokens, text };
     } catch (error) {
