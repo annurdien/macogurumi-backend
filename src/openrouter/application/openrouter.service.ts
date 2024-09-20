@@ -27,9 +27,9 @@ export class OpenrouterService {
       const totalTokens = completion.usage?.total_tokens || 0;
       const text = completion.choices[0]?.message?.content || '';
 
-      this.logger.log(`Total Token: ${totalTokens}`)
-      this.logger.log(`Model: ${completion.model}`)
-      this.logger.log(`OpenRouter response: ${JSON.stringify({ text })}`);
+      this.logger.debug(`Total Token: ${totalTokens}`)
+      this.logger.debug(`Model: ${completion.model}`)
+      this.logger.debug(`OpenRouter response: \n${text}`);
 
       return { totalTokens, text };
     } catch (error) {

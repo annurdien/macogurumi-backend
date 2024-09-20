@@ -15,14 +15,14 @@ export class GeminiService {
       const contents = createContent(prompt);
 
       const { totalTokens } = await this.proModel.countTokens({ contents });
-      this.logger.log(`Model: ${this.proModel.model}`)
-      this.logger.log(`Tokens: ${JSON.stringify(totalTokens)}`);
+      this.logger.debug(`Model: ${this.proModel.model}`)
+      this.logger.debug(`Tokens: ${JSON.stringify(totalTokens)}`);
 
       const result = await this.proModel.generateContent({ contents });
       const response = result.response;
       const text = response.text();
 
-      this.logger.log(JSON.stringify(text));
+      this.logger.debug(JSON.stringify(text));
       return { totalTokens, text };
 
     } catch (error) {

@@ -117,8 +117,6 @@ export class CROMLToJSONConverter implements MarkupToJSONConverter {
         // remove all spaces but not newline in input string
         const noSpacing = input.replaceAll(' ', '');
 
-        console.log(noSpacing)
-
         const lines = noSpacing.split(/\r?\n/);
 
         lines.forEach((line) => {
