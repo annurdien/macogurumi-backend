@@ -1,29 +1,50 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: 'AWS::Serverless-2016-10-31'
-Description: Macogurumi backend on AWS Lambda
-
+Transform: AWS::Serverless-2016-10-31
+Description: Macogurumi Backend
 Resources:
-  MyNestJSLambdaFunction:
+  macogurumibackenddevmain:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: dist/serverless.handler
-      Runtime: nodejs20.x
-      CodeUri: ./
-      MemorySize: 256
+      CodeUri: .
+      Description: ''
+      MemorySize: 1024
       Timeout: 30
+      Handler: dist/main.handler
+      Runtime: nodejs20.x
+      Architectures:
+        - x86_64
+      EphemeralStorage:
+        Size: 512
+      EventInvokeConfig:
+        MaximumEventAgeInSeconds: 21600
+        MaximumRetryAttempts: 2
+      PackageType: Zip
+      Policies:
+        - Statement:
+            - Action:
+                - logs:CreateLogStream
+                - logs:CreateLogGroup
+                - logs:TagResource
+              Resource:
+                - >-
+                  arn:aws:logs:us-east-1:120569622732:log-group:/aws/lambda/macogurumi-backend-dev*:*
+              Effect: Allow
+            - Action:
+                - logs:PutLogEvents
+              Resource:
+                - >-
+                  arn:aws:logs:us-east-1:120569622732:log-group:/aws/lambda/macogurumi-backend-dev*:*:*
+              Effect: Allow
+      RecursiveLoop: Terminate
+      SnapStart:
+        ApplyOn: None
+      Tags:
+        STAGE: dev
       Events:
-        DecodePattern:
-          Type: Api
-          Properties:
-            Path: /{proxy+}
-            Method: ANY
-        RootPath:
+        Api1:
           Type: Api
           Properties:
             Path: /
             Method: ANY
-
-Outputs:
-  DecodePatternApi:
-    Description: 'API Gateway endpoint URL for the DecodePattern function'
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
