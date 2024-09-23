@@ -9,7 +9,7 @@ type Stitch = {
 
 type Sequence = {
     stiches: Stitch[];
-    repeat: number;
+    repeats: number;
 }
 
 type Layer = {
