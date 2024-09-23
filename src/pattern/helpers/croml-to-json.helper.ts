@@ -16,7 +16,7 @@ export class CROMLToJSONConverter implements MarkupToJSONConverter {
         // Process each grouped sequence
         while ((groupMatch = groupRegex.exec(sequenceText)) !== null) {
             const groupContent = groupMatch[1];
-            const repeat = parseInt(groupMatch[2], 10);
+            const repeats = parseInt(groupMatch[2], 10);
 
             // Handle single stitches before the group
             const preGroupText = sequenceText.substring(lastIndex, groupMatch.index).trim();
@@ -28,7 +28,7 @@ export class CROMLToJSONConverter implements MarkupToJSONConverter {
             const stitches = this.parseStitchGroup(groupContent);
             sequences.push({
                 stiches: stitches,
-                repeat,
+                repeats,
             });
 
             // Update lastIndex to be the end of the current group
@@ -60,7 +60,7 @@ export class CROMLToJSONConverter implements MarkupToJSONConverter {
                         times: times,
                     },
                 ],
-                repeat: 1,
+                repeats: 1,
             });
         }
     }
