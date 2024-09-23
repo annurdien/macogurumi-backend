@@ -1,8 +1,8 @@
 {
   "name": "macogurumi-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Backend to parse amigurumi pattern to JSON",
+  "author": "Annurdien Rasyid",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
