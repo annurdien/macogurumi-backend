@@ -19,7 +19,7 @@ export class PatternService {
         let response: GenAiResponse;
 
         if(!param.provider) {
-            response = await this.openrouterService.generateText(param.pattern);
+            response = await this.geminiService.generateText(param.pattern);
         }
 
         switch(param.provider) {
