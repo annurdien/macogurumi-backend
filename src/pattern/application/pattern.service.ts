@@ -42,7 +42,7 @@ export class PatternService {
         };
     }
 
-    async decodeToCROML(param: { pattern: string, provider?: PROVIDER }): Promise<String> {
+    async decodeToCROML(param: { pattern: string, provider?: PROVIDER }): Promise<Object> {
         let response: GenAiResponse;
 
         if (!param.provider) {
@@ -62,6 +62,9 @@ export class PatternService {
 
         let patternCROML: string = response.text;
 
-        return patternCROML;
+        return {
+            data: patternCROML,
+            status: 'success'
+        };
     }
 }
