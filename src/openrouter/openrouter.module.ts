@@ -4,6 +4,6 @@ import { OpenRouterModelProvider } from './application/openrouter.provider';
 
 @Module({
   providers: [OpenrouterService, OpenRouterModelProvider],
-  exports: [OpenrouterService]
+  exports: [OpenrouterService],
 })
 export class OpenrouterModule {}

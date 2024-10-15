@@ -7,7 +7,6 @@ import { GenAiResponse } from '~shared/interfaces/genai-response.type';
 import { CROMLToJSONConverter } from '~pattern/helpers/croml-to-json.helper';
 import { Pattern } from '~pattern/domain/interfaces/pattern.type';
 
-
 describe('PatterDecoderService', () => {
   let service: PatternService;
   let geminiService: GeminiService;
@@ -114,4 +113,3 @@ describe('PatterDecoderService', () => {
     });
   });
 });
-

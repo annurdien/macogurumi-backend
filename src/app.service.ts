@@ -5,7 +5,7 @@ export class AppService {
   getHello(): any {
     return {
       status: 'active',
-      message: 'Hello, from macogurumi!'
+      message: 'Hello, from macogurumi!',
     };
   }
 }

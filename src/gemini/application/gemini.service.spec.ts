@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GeminiService } from './gemini.service';
 import { GenerativeModel } from '@google/generative-ai';
 import { GEMINI_PRO_MODEL } from './gemini.constant';
-import { GenAiResponse } from '~shared/interfaces/genai-response.type'; 
+import { GenAiResponse } from '~shared/interfaces/genai-response.type';
 
 describe('GeminiService', () => {
   let service: GeminiService;

@@ -1,4 +1,4 @@
 export type GenAiResponse = {
-    totalTokens: number;
-    text: string;
-}
+  totalTokens: number;
+  text: string;
+};

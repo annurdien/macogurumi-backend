@@ -15,7 +15,7 @@ export class GeminiService {
       const contents = createContent(prompt);
 
       const { totalTokens } = await this.proModel.countTokens({ contents });
-      this.logger.debug(`Model: ${this.proModel.model}`)
+      this.logger.debug(`Model: ${this.proModel.model}`);
       this.logger.debug(`Tokens: ${JSON.stringify(totalTokens)}`);
 
       const result = await this.proModel.generateContent({ contents });
@@ -24,7 +24,6 @@ export class GeminiService {
 
       this.logger.debug(JSON.stringify(text));
       return { totalTokens, text };
-
     } catch (error) {
       this.logger.error(`Error generating text with Gemini: ${error}`);
 
@@ -38,4 +37,3 @@ export class GeminiService {
     }
   }
 }
-

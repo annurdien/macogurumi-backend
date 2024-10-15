@@ -5,9 +5,10 @@ import { GeminiModule } from './gemini/gemini.module';
 import { OpenrouterModule } from './openrouter/openrouter.module';
 import { SharedModule } from './shared/shared.module';
 import { PatternModule } from '~pattern/pattern.module';
+import { SambaNovaModule } from './samba-nova/samba-nova.module';
 
 @Module({
-  imports: [GeminiModule, OpenrouterModule, SharedModule, PatternModule],
+  imports: [GeminiModule, OpenrouterModule, SharedModule, PatternModule, SambaNovaModule],
   controllers: [AppController],
   providers: [AppService],
 })

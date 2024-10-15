@@ -6,7 +6,6 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { env } from '~shared/configs/env.config';
 
-
 function setupSwagger(app: NestExpressApplication) {
   const config = new DocumentBuilder()
     .setTitle('Macogurumi')

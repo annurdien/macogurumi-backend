@@ -1,29 +1,29 @@
 type CrochetPattern = {
-    parts: Part[];
-}
+  parts: Part[];
+};
 
 type Stitch = {
-    name: string;
-    times: number;
-}
+  name: string;
+  times: number;
+};
 
 type Sequence = {
-    stiches: Stitch[];
-    repeats: number;
-}
+  stiches: Stitch[];
+  repeats: number;
+};
 
 type Layer = {
-    id: number;
-    sequences: Sequence[];
-}
+  id: number;
+  sequences: Sequence[];
+};
 
 type Part = {
-    name: string;
-    layers: Layer[];
-}
+  name: string;
+  layers: Layer[];
+};
 
 type Pattern = {
-    parts: Part[];
-}
+  parts: Part[];
+};
 
-export { CrochetPattern, Stitch, Sequence, Layer, Part, Pattern }
+export { CrochetPattern, Stitch, Sequence, Layer, Part, Pattern };

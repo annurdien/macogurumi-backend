@@ -1,6 +1,6 @@
-import { CrochetPattern } from "./pattern.type";
+import { CrochetPattern } from './pattern.type';
 
 export type PatternDecoderResponse = {
-    totalPart: number,
-    pattern: CrochetPattern
-}
+  totalPart: number;
+  pattern: CrochetPattern;
+};

@@ -8,39 +8,35 @@ import { PatternDecoderResponse } from '~pattern/domain/interfaces/response.type
 @ApiTags('Pattern Decoder')
 @UseGuards(ApiKeyGuard)
 @Controller({
-    path: 'pattern',
-    version: '1'
+  path: 'pattern',
+  version: '1',
 })
 export class PatternController {
-    constructor(private readonly patternDecoderService: PatternService) { }
+  constructor(private readonly patternDecoderService: PatternService) {}
 
-    @ApiBody({
-        description: 'The pattern to decode',
-        required: true,
-        type: PatternDecoderDto,
-    })
-    @Post('decode')
-    async decodePattern(
-        @Body() dto: PatternDecoderDto
-    ) {
-        return this.patternDecoderService.decodePattern({
-            pattern: dto.pattern,
-            provider: dto.provider
-        })
-    }
+  @ApiBody({
+    description: 'The pattern to decode',
+    required: true,
+    type: PatternDecoderDto,
+  })
+  @Post('decode')
+  async decodePattern(@Body() dto: PatternDecoderDto) {
+    return this.patternDecoderService.decodePattern({
+      pattern: dto.pattern,
+      provider: dto.provider,
+    });
+  }
 
-    @ApiBody({
-        description: 'The pattern to decode',
-        required: true,
-        type: PatternDecoderDto,
-    })
-    @Post('decode/croml')
-    async decodeToCROML(
-        @Body() dto: PatternDecoderDto
-    ) {
-        return this.patternDecoderService.decodeToCROML({
-            pattern: dto.pattern,
-            provider: dto.provider
-        })
-    }
+  @ApiBody({
+    description: 'The pattern to decode',
+    required: true,
+    type: PatternDecoderDto,
+  })
+  @Post('decode/croml')
+  async decodeToCROML(@Body() dto: PatternDecoderDto) {
+    return this.patternDecoderService.decodeToCROML({
+      pattern: dto.pattern,
+      provider: dto.provider,
+    });
+  }
 }
