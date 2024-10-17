@@ -21,7 +21,7 @@ export class PatternService {
     let response: GenAiResponse;
 
     if (!param.provider) {
-      response = await this.geminiService.generateText(param.pattern);
+      response = await this.sambaNovaService.generateText(param.pattern);
     }
 
     switch (param.provider) {
