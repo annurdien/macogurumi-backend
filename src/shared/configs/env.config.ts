@@ -19,4 +19,18 @@ export const env = {
   API: {
     KEY: process.env.X_API_KEY || '',
   },
+  AWS: {
+    REGION: process.env.AWS_REGION,
+    ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    IS_DDB_LOCAL: process.env.IS_DDB_LOCAL === 'true',
+    SERVICE: process.env.SERVICE,
+    STAGE: process.env.STAGE,
+  },
+  R2: {
+    BUCKET_NAME: process.env.R2_BUCKET_NAME || '',
+    ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID || '',
+    SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY || '',
+    ENDPOINT: process.env.R2_ENDPOINT || '',
+  }
 };
