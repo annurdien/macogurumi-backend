@@ -21,7 +21,7 @@ export const HighlightSchema = new Schema({
     socialMediaIcon: {
         type: String
     },
-    sociaMediaUrl: {
+    socialMediaUrl: {
         type: String
     },
     timestamp: {

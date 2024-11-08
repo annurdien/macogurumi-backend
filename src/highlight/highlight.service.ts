@@ -38,14 +38,14 @@ export class HighlightService {
 
     async findAll(
         order: Order = Order.ASC,
-        limit: number = 10,
+        limit?: number,
         lastEvaluatedKey?: any
     ) {
         const query = this.model
             .query('project')
             .eq('kagibari')
             .sort(order === Order.ASC ? SortOrder.ascending : SortOrder.descending)
-            .limit(limit);
+            .limit(limit ?? 0);
 
         if (lastEvaluatedKey) {
             query.startAt(lastEvaluatedKey);

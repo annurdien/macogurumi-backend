@@ -1,13 +1,13 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { HighlightService } from './highlight.service';
-import { CreateHighlightDto, UpdateHighlightDto } from './highlight.dto';
+import { CreateHighlightDto, Order, UpdateHighlightDto } from './highlight.dto';
 import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller({
     path: 'highlight',
     version: '1',
 })
-@SkipThrottle()
+
 export class HighlightController {
     constructor(private readonly highlightService: HighlightService) { }
 
@@ -45,8 +45,29 @@ export class HighlightController {
         return highlight;
     }
 
+    @SkipThrottle()
     @Get()
-    async findAll() {
-        return this.highlightService.findAll();
+    async findAll(
+        @Query('order') order?: Order,
+        @Query('limit') limit?: string,
+        @Query('lastEvaluatedKey') lastEvaluatedKey?: string // Note: Accepting as a string initially
+    ) {
+        const parsedLimit = limit ? parseInt(limit, 0) : undefined;
+        if (isNaN(parsedLimit ?? 0) && parsedLimit !== undefined) {
+            throw new BadRequestException('Limit must be a number');
+        }
+
+        let parsedLastEvaluatedKey;
+        try {
+            parsedLastEvaluatedKey = lastEvaluatedKey ? JSON.parse(lastEvaluatedKey) : undefined;
+        } catch (e) {
+            throw new BadRequestException('Invalid format for lastEvaluatedKey');
+        }
+
+        return this.highlightService.findAll(
+            order,
+            parsedLimit,
+            parsedLastEvaluatedKey
+        );
     }
 }
