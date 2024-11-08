@@ -1,6 +1,6 @@
 export interface HighlightKey {
     project: string;
-    timestamp: Number;
+    timestamp: number;
 }
 
 export interface Highlight extends HighlightKey {
@@ -9,5 +9,5 @@ export interface Highlight extends HighlightKey {
     content: string;
     author: string;
     socialMediaIcon: string;
-    sociaMediaUrl: string;
+    socialMediaUrl: string;
 }

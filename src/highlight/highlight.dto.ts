@@ -23,7 +23,7 @@ export class CreateHighlightDto {
 
     @IsNotEmpty()
     @IsString()
-    sociaMediaUrl: string;
+    socialMediaUrl: string;
 }
 
 export class UpdateHighlightDto {
@@ -43,7 +43,7 @@ export class UpdateHighlightDto {
     socialMediaIcon?: string;
 
     @IsString()
-    sociaMediaUrl?: string;
+    socialMediaUrl?: string;
 }
 
 export enum Order {

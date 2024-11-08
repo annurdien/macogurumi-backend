@@ -36,11 +36,25 @@ export class HighlightService {
         return this.model.get(key);
     }
 
-    async findAll(order: Order = Order.ASC) {
-        return await this.model
+    async findAll(
+        order: Order = Order.ASC,
+        limit: number = 10,
+        lastEvaluatedKey?: any
+    ) {
+        const query = this.model
             .query('project')
             .eq('kagibari')
             .sort(order === Order.ASC ? SortOrder.ascending : SortOrder.descending)
-            .exec()
+            .limit(limit);
+
+        if (lastEvaluatedKey) {
+            query.startAt(lastEvaluatedKey);
+        }
+
+        const result = await query.exec();
+        return {
+            items: result,
+            lastEvaluatedKey: result.lastKey
+        };
     }
 }

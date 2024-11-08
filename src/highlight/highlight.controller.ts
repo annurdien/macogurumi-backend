@@ -19,7 +19,7 @@ export class HighlightController {
     @Patch(':project/:timestamp')
     async update(
         @Param('project') project: string,
-        @Param('timestamp') timestamp: Number,
+        @Param('timestamp') timestamp: number,
         @Body() body: UpdateHighlightDto
     ) {
         return this.highlightService.update({ project, timestamp }, body);
@@ -28,7 +28,7 @@ export class HighlightController {
     @Delete(':project/:timestamp')
     async delete(
         @Param('project') project: string,
-        @Param('timestamp') timestamp: Number
+        @Param('timestamp') timestamp: number
     ) {
         return this.highlightService.delete({ project, timestamp });
     }
@@ -36,7 +36,7 @@ export class HighlightController {
     @Get(':project/:timestamp')
     async findOne(
         @Param('project') project: string,
-        @Param('timestamp') timestamp: Number
+        @Param('timestamp') timestamp: number
     ) {
         const highlight = await this.highlightService.findOne({ project, timestamp });
         if (!highlight) {
