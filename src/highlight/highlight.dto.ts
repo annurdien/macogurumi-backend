@@ -1,4 +1,5 @@
-import { IsNotEmpty, isNumber, IsString } from 'class-validator';
+import { IsNotEmpty, isNumber, isObject, IsObject, IsString } from 'class-validator';
+import { Author, Content } from './highlight.interface';
 
 export class CreateHighlightDto {
     @IsNotEmpty()
@@ -10,20 +11,12 @@ export class CreateHighlightDto {
     title: string;
 
     @IsNotEmpty()
-    @IsString()
-    content: string;
+    @IsObject()
+    content: Content;
 
     @IsNotEmpty()
-    @IsString()
-    author: string;
-
-    @IsNotEmpty()
-    @IsString()
-    socialMediaIcon: string;
-
-    @IsNotEmpty()
-    @IsString()
-    socialMediaUrl: string;
+    @IsObject()
+    author: Author;
 }
 
 export class UpdateHighlightDto {
@@ -33,17 +26,11 @@ export class UpdateHighlightDto {
     @IsString()
     title?: string;
 
-    @IsString()
-    content?: string;
+    @IsObject()
+    content?: Content;
 
-    @IsString()
-    author?: string;
-
-    @IsString()
-    socialMediaIcon?: string;
-
-    @IsString()
-    socialMediaUrl?: string;
+    @IsObject()
+    author?: Author;
 }
 
 export enum Order {

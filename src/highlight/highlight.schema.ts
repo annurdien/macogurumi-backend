@@ -13,16 +13,21 @@ export const HighlightSchema = new Schema({
         type: String
     },
     content: {
-        type: String
+        type: Object,
+        schema: {
+            texts: { type: Array, schema: [String], required: false },
+            images: { type: Array, schema: [String], required: false },
+            videos: { type: Array, schema: [String], required: false },
+        }
     },
     author: {
-        type: String
-    },
-    socialMediaIcon: {
-        type: String
-    },
-    socialMediaUrl: {
-        type: String
+        type: Object,
+        schema: {
+            name: { type: String, required: true },
+            socialMediaAccount: { type: String, required: true },
+            socialMediaIcon: { type: String, required: true },
+            socialMediaUrl: { type: String, required: true },
+        }
     },
     timestamp: {
         type: Number,
@@ -31,5 +36,4 @@ export const HighlightSchema = new Schema({
     updatedAt: {
         type: Number,
     }
-}
-);
+});
