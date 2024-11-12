@@ -41,3 +41,4 @@ lerna-debug.log*
 .vercel
 .aws-sam
 .serverless
+.dynamodb

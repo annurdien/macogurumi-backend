@@ -3,7 +3,7 @@ STAGE ?= dev
 
 # Build the project using the existing build-lambda command
 build: clean
-	yarn build-lambda
+	yarn build:lambda
 
 # Deploy the lambda function using serverless
 # Always runs 'build' before deploying

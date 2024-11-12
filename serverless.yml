@@ -6,6 +6,7 @@ service: macogurumi-backend
 
 plugins:
   - serverless-offline
+  - serverless-dynamodb
 
 provider:
   name: aws
@@ -41,3 +42,4 @@ package:
     - '!vercel.json'
     - '!webpack.config.js'
     - '!yarn.lock'
+    - '!.dynamodb/**'
