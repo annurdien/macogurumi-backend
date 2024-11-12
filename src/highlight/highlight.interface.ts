@@ -11,6 +11,7 @@ export interface Highlight extends HighlightKey {
 }
 
 export interface Content {
+    category: string;
     texts?: string[];
     images?: string[];
     videos?: string[];

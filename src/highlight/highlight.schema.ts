@@ -15,6 +15,7 @@ export const HighlightSchema = new Schema({
     content: {
         type: Object,
         schema: {
+            category: { type: String, required: true },
             texts: { type: Array, schema: [String], required: false },
             images: { type: Array, schema: [String], required: false },
             videos: { type: Array, schema: [String], required: false },
