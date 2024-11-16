@@ -31,7 +31,7 @@ export class PatternService {
         response = await this.sambaNovaService.generateText(param.pattern);
         break;
       default:
-        response = await this.sambaNovaService.generateText(param.pattern);
+        response = await this.geminiService.generateText(param.pattern);
     }
 
     let patternCROML: string = response.text;

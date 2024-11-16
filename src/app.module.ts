@@ -25,7 +25,7 @@ import { R2Module } from './r2/r2.module';
     ThrottlerModule.forRoot([
       {
         ttl: 60000, // 10 request per minute per IP
-        limit: 10
+        limit: 100
       }
     ]),
     DynamooseModule.forRoot({
