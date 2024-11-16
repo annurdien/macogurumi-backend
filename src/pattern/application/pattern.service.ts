@@ -22,7 +22,7 @@ export class PatternService {
 
     switch (param.provider) {
       case PROVIDER.GEMINI:
-        response = await this.geminiService.generateText(param.pattern);
+        response = await this.sambaNovaService.generateText(param.pattern);
         break;
       case PROVIDER.OPENROUTER:
         response = await this.openrouterService.generateText(param.pattern);
@@ -31,7 +31,7 @@ export class PatternService {
         response = await this.sambaNovaService.generateText(param.pattern);
         break;
       default:
-        response = await this.geminiService.generateText(param.pattern);
+        response = await this.sambaNovaService.generateText(param.pattern);
     }
 
     let patternCROML: string = response.text;
