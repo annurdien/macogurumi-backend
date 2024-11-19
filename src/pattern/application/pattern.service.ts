@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GeminiService } from '~gemini/application/gemini.service';
 import { OpenrouterService } from '~openrouter/application/openrouter.service';
 import { CrochetPattern } from '~pattern/domain/interfaces/pattern.type';
@@ -10,6 +10,9 @@ import { SambaNovaService } from '~samba-nova/application/samba-nova.service';
 
 @Injectable()
 export class PatternService {
+  private defaultProvider: PROVIDER = PROVIDER.GEMINI;
+  private readonly logger = new Logger(PatternService.name);
+
   constructor(
     private readonly geminiService: GeminiService,
     private readonly openrouterService: OpenrouterService,
@@ -17,25 +20,52 @@ export class PatternService {
     private readonly cromlToJsonsConverter: CROMLToJSONConverter,
   ) { }
 
-  async decodePattern(param: { pattern: string; provider?: PROVIDER }): Promise<PatternDecoderResponse> {
-    let response: GenAiResponse;
-
-    switch (param.provider) {
+  private async callProvider(
+    provider: PROVIDER,
+    pattern: string,
+  ): Promise<GenAiResponse> {
+    switch (provider) {
       case PROVIDER.GEMINI:
-        response = await this.sambaNovaService.generateText(param.pattern);
-        break;
+        return await this.geminiService.generateText(pattern);
       case PROVIDER.OPENROUTER:
-        response = await this.openrouterService.generateText(param.pattern);
-        break;
+        return await this.openrouterService.generateText(pattern);
       case PROVIDER.SAMBA_NOVA:
-        response = await this.sambaNovaService.generateText(param.pattern);
-        break;
+        return await this.sambaNovaService.generateText(pattern);
       default:
-        response = await this.sambaNovaService.generateText(param.pattern);
+        throw new Error(`Unsupported provider: ${provider}`);
     }
+  }
 
-    let patternCROML: string = response.text;
-    let patternJSON: CrochetPattern = this.cromlToJsonsConverter.convert(patternCROML);
+  private async executeWithFallback(
+    pattern: string,
+    providers: PROVIDER[],
+  ): Promise<GenAiResponse> {
+    for (const provider of providers) {
+      try {
+        const response = await this.callProvider(provider, pattern);
+        this.defaultProvider = provider;
+        return response;
+      } catch (error) {
+        this.logger.error(
+          `Provider ${provider} failed. Error: ${error.message}`,
+        );
+      }
+    }
+    throw new Error('All providers failed');
+  }
+
+  async decodePattern(param: {
+    pattern: string;
+    provider?: PROVIDER;
+  }): Promise<PatternDecoderResponse> {
+    const providersOrder = param.provider
+      ? [param.provider, ...Object.values(PROVIDER).filter((p) => p !== param.provider)]
+      : [this.defaultProvider, ...Object.values(PROVIDER).filter((p) => p !== this.defaultProvider)];
+
+    const response = await this.executeWithFallback(param.pattern, providersOrder);
+
+    const patternCROML: string = response.text;
+    const patternJSON: CrochetPattern = this.cromlToJsonsConverter.convert(patternCROML);
 
     return {
       pattern: patternJSON,
@@ -43,31 +73,18 @@ export class PatternService {
     };
   }
 
-  async decodeToCROML(param: { pattern: string; provider?: PROVIDER }): Promise<Object> {
-    let response: GenAiResponse;
+  async decodeToCROML(param: {
+    pattern: string;
+    provider?: PROVIDER;
+  }): Promise<Object> {
+    const providersOrder = param.provider
+      ? [param.provider, ...Object.values(PROVIDER).filter((p) => p !== param.provider)]
+      : [this.defaultProvider, ...Object.values(PROVIDER).filter((p) => p !== this.defaultProvider)];
 
-    if (!param.provider) {
-      response = await this.geminiService.generateText(param.pattern);
-    }
-
-    switch (param.provider) {
-      case PROVIDER.GEMINI:
-        response = await this.geminiService.generateText(param.pattern);
-        break;
-      case PROVIDER.OPENROUTER:
-        response = await this.openrouterService.generateText(param.pattern);
-        break;
-      case PROVIDER.SAMBA_NOVA:
-        response = await this.sambaNovaService.generateText(param.pattern);
-        break;
-      default:
-        response = await this.geminiService.generateText(param.pattern);
-    }
-
-    let patternCROML: string = response.text;
+    const response = await this.executeWithFallback(param.pattern, providersOrder);
 
     return {
-      data: patternCROML,
+      data: response.text,
       status: 'success',
     };
   }
